@@ -1,0 +1,38 @@
+ibrary(tidyverse)
+
+theme_set(theme_light())
+
+prison_pop <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-22/prison_summary.csv")
+
+prison_pop$year <- as.factor(prison_pop$year)
+# No. of Male and Female prisoners
+prison_pop %>% 
+  group_by(year) %>% 
+  filter(pop_category %in% c("Male","Female")) %>% 
+  ggplot(aes(year,rate_per_100000, fill = pop_category))+ geom_col()+ 
+  scale_fill_brewer(palette = "Set2")+
+  labs(fill = " ", x = "Year",y = "Rate of prison population / 100,000 people",
+       title = "Prison data (1983-2015) comparing no. of black and white prisoners",
+       caption = "Data Provided by The Vera Institute")+
+  expand_limits(y = 6000)+
+  theme(legend.position = "top",
+        axis.line = element_line(colour = "black"),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle = 60,vjust = 0.4, colour = "black"))
+#Save image
+ggsave("prion_pop.png", width = 20,height =10, units = "cm" )
+
+## prison population and urbanicity
+prison_pop %>% 
+  group_by(year) %>% 
+  ggplot(aes(year,rate_per_100000, fill = urbanicity))+ geom_col()+ 
+  scale_fill_brewer(palette = "Set1")+
+  labs(fill = " ", x = "Year",y = "Rate of prison population / 100,000 people",
+       title = "Prison data (1983-2015): Urbanicity and Prison Population",
+       caption = "Data Provided by The Vera Institute")+
+  expand_limits(y = 6000)+
+  theme(legend.position = "top",
+        axis.line = element_line(colour = "black"),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle = 60,vjust = 0.4, colour = "black"))
+ggsave("prion_pop2.png", width = 20,height =10, units = "cm" )
